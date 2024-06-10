@@ -1,9 +1,13 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 
 
-@app.route('/modbus', methods=['POST'])
+@app.route('/', methods=['GET'])
+def hello_world():
+    return render_template('index.html')
+
+@app.route('/', methods=['POST'])
 def handle_modbus():
     # Get the JSON data from the POST request
     data = request.json
@@ -39,3 +43,4 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=9000)
 
 
+# curl -X POST -H "Content-Type: application/json" -d '{"ip": "192.168.0.100","port": 502,"unit_id": 1,"address": 100,"values": [123, 456, 789],"timestamp": "2024-05-21T12:34:56Z"}' http://127.0.0.1:5000/modbus
