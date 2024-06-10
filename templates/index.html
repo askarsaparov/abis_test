@@ -9,7 +9,9 @@
 </head>
 <body>
 
-<h1>Welcome to the homepage</h1>
+{% for dataclass in dataclasses %}
+<h1>{{ dataclass }}</h1>
+{% endfor %}
 
 </body>
 </html>
