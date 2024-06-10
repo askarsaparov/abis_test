@@ -40,7 +40,7 @@ def handle_modbus():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=9000)
+    app.run(host='127.0.0.1', port=9000)
 
 
 # curl -X POST -H "Content-Type: application/json" -d '{"ip": "192.168.0.100","port": 502,"unit_id": 1,"address": 100,"values": [123, 456, 789],"timestamp": "2024-05-21T12:34:56Z"}' http://127.0.0.1:5000/modbus
