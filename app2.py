@@ -1,27 +1,35 @@
-from flask import Flask, request, abort
+import socket
 
-app = Flask(__name__)
+# Define the IP address and port to listen on
+HOST = '0.0.0.0'  # Listen on all available network interfaces
+PORT = 5000        # Replace with your desired port number
 
+# Create a socket object
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-@app.route('/', methods=['POST'])
-def upload_file():
-    if 'file' not in request.files:
-        abort(400, 'No file part')
+# Allow the socket to reuse the address
+server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-    file = request.files['file']
+# Bind the socket to the address and port
+server_socket.bind((HOST, PORT))
 
-    if file.filename == '':
-        abort(400, 'No selected file')
+# Listen for incoming connections
+server_socket.listen(5)
+print(f'Server listening on {HOST}:{PORT}')
 
-    # Binar ma'lumotni o'qish
-    file_data = file.read()
+while True:
+    # Accept an incoming connection
+    client_socket, client_address = server_socket.accept()
+    print(f'Connection from {client_address}')
 
-    # Binar ma'lumotni fayl sifatida saqlash
-    with open('uploaded_file.bin', 'wb') as f:
-        f.write(file_data)
+    # Receive data from the client
+    data = client_socket.recv(1024)
+    if data:
+        print(f'Received data: {data}')
 
-    return 'File successfully uploaded', 200
+        # Send a response to the client
+        response = b'ACK'
+        client_socket.sendall(response)
 
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    # Close the client connection
+    client_socket.close()
